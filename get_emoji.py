@@ -19,8 +19,16 @@ def download(name, url):
     dest_file = "results/" + name + "." + ext
     if os.path.isfile(dest_file):
         return
-    print_key("PULLING", name, url)
-    urllib.request.urlretrieve(url, "results/" + name + "." + ext)
+    try:
+        urllib.request.urlretrieve(url, "results/" + name + "." + ext)
+        print_key("PULLED", name, url)
+
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            open("results/" + name + "." + ext, 'a').close()
+            print_key("SKIPPED", name, url)
+        else:
+            raise
 
 def print_key(prefix, key, value):
     base_col = 32
