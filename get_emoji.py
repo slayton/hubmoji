@@ -19,9 +19,15 @@ def download(name, url):
     dest_file = "results/" + name + "." + ext
     if os.path.isfile(dest_file):
         return
-    print ('downloading...\t' + dest_file)
+    print_key("PULLING", name, url)
     urllib.request.urlretrieve(url, "results/" + name + "." + ext)
 
+def print_key(prefix, key, value):
+    base_col = 32
+    key_str = prefix + ": \t" + key
+    spaces_needed = max(base_col - len(key_str), 1)
+    indent = ' ' * spaces_needed
+    print(f"{key_str}{indent}{value}")
 
 def ensure_results_dir():
     if not os.path.exists("results"):
@@ -39,9 +45,10 @@ def main():
         ensure_results_dir()
     for key in keys:
         if args.name in key:
-            print(key + "\n-------------\n" + emojis[key]+'\n')
             if args.d:
                 download(key, emojis[key])
+            else: 
+                print_key("FOUND", key, emojis[key])
 
 
 if __name__=="__main__":
