@@ -6,6 +6,7 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument('name', type=str)
 parser.add_argument('-d', action='store_true')
+parser.add_argument('-f', action='store_true')
 
 
 def load():
@@ -41,8 +42,13 @@ def ensure_results_dir():
     if not os.path.exists("results"):
         os.makedirs("results")
 
-def main():
+def match(name, key_name, full_match=False): 
+    if full_match:
+        return name == key_name
+    else:
+        return name in key_name
 
+def main():
     args = parser.parse_args()
     print(args.d)
     print("looking for: [" + args.name + "]")
@@ -52,7 +58,7 @@ def main():
     if args.d:
         ensure_results_dir()
     for key in keys:
-        if args.name in key:
+        if match(args.name, key, args.f):
             if args.d:
                 download(key, emojis[key])
             else: 
